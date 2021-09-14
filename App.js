@@ -1,4 +1,3 @@
-import { StatusBar } from "expo-status-bar";
 import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import MapView, { Marker } from "react-native-maps";
@@ -48,39 +47,41 @@ export default function App() {
         accuracy: Location.Accuracy.High,
         timeInterval: 5000,
       });
-      console.log(location);
+      console.log(location.coords.latitude);
       setLocation(location);
     })();
   }, []);
   return (
     <View style={styles.container}>
-      <MapView
-        initialRegion={{
-          latitude: 45.2553189,
-          longitude: 19.8344653,
-          latitudeDelta: 0.0922,
-          longitudeDelta: 0.0421,
-        }}
-        style={{ height: "50%", width: "100%" }}
-        minZoomLevel={14}
-      >
-        <Marker
-          coordinate={{ latitude: 45.2553189, longitude: 19.8344653 }}
-          title={"My Location"}
-        />
-        {markers.map((marker, idx) => (
+      {location && (
+        <MapView
+          initialRegion={{
+            latitude: location.coords.latitude,
+            longitude: location.coords.longitude,
+            latitudeDelta: 0.0922,
+            longitudeDelta: 0.0421,
+          }}
+          style={{ height: "50%", width: "100%" }}
+          minZoomLevel={14}
+        >
           <Marker
-            key={idx}
-            coordinate={{
-              latitude: marker.latitude,
-              longitude: marker.longitude,
-            }}
-            title={marker.title}
-            description={marker.description}
-            pinColor="green"
+            coordinate={{ latitude: 45.2553189, longitude: 19.8344653 }}
+            title={"My Location"}
           />
-        ))}
-      </MapView>
+          {markers.map((marker, idx) => (
+            <Marker
+              key={idx}
+              coordinate={{
+                latitude: marker.latitude,
+                longitude: marker.longitude,
+              }}
+              title={marker.title}
+              description={marker.description}
+              pinColor="green"
+            />
+          ))}
+        </MapView>
+      )}
     </View>
   );
 }
